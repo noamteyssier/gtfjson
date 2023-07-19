@@ -1,8 +1,11 @@
 use anyhow::Result;
-use std::{fs::File, io::{BufReader, BufWriter, Write, BufRead}};
+use clap::Parser;
 use flate2::read::MultiGzDecoder;
 use gtftools::GtfReader;
-use clap::Parser;
+use std::{
+    fs::File,
+    io::{BufRead, BufReader, BufWriter, Write},
+};
 
 #[derive(Parser)]
 struct Cli {
@@ -21,7 +24,9 @@ fn match_output(output: Option<String>) -> Box<dyn Write> {
 
 fn match_input(input: String) -> Box<dyn BufRead> {
     match input.ends_with(".gz") {
-        true => Box::new(BufReader::new(MultiGzDecoder::new(File::open(input).unwrap()))),
+        true => Box::new(BufReader::new(MultiGzDecoder::new(
+            File::open(input).unwrap(),
+        ))),
         false => Box::new(BufReader::new(File::open(input).unwrap())),
     }
 }
@@ -40,10 +45,8 @@ fn main() -> Result<()> {
 
     // read in gtf records and parse to json
     let json_records = GtfReader::from_bufread(input_handle)
-      .filter_map(|x| x.ok())
-      .map(|x| {
-          serde_json::to_string(&x).unwrap()
-      });
+        .filter_map(|x| x.ok())
+        .map(|x| serde_json::to_string(&x).unwrap());
 
     // write newline delimited json to output handle
     for j in json_records {
@@ -52,4 +55,3 @@ fn main() -> Result<()> {
 
     Ok(())
 }
-
