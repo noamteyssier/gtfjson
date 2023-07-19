@@ -2,6 +2,12 @@
 name = "gtf2json"
 version = "0.1.0"
 edition = "2021"
+description = "A tool to convert GTF files to newline-delim JSON"
+repository = "https://github.com/noamteyssier/gtf2json"
+license = "MIT"
+readme = "README.md"
+categories = ["science", "command-line-utilities"]
+keywords = ["bioinformatics", "genomics", "gtf", "json", "parser"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
