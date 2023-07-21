@@ -1,10 +1,10 @@
-use crate::{io::match_output, types::FlatRecord};
+use crate::types::FlatRecord;
 use anyhow::Result;
 use spinoff::{spinners, Color, Spinner, Streams};
 use std::{
     collections::{HashMap, HashSet},
     fs::{File, OpenOptions},
-    io::{BufRead, BufReader, BufWriter, Write},
+    io::{BufRead, BufReader, Write},
 };
 
 fn load_file(filename: &str) -> Result<BufReader<File>> {
