@@ -1,17 +1,16 @@
-use std::{fs::File, io::{BufReader, BufRead, BufWriter, Write}, collections::HashMap};
+use crate::{io::match_output, types::FlatRecord};
 use anyhow::Result;
-use crate::{types::FlatRecord, io::match_output};
+use std::{
+    collections::HashMap,
+    fs::File,
+    io::{BufRead, BufReader, BufWriter, Write},
+};
 
 fn load_file(filename: &str) -> Result<BufReader<File>> {
     Ok(File::open(filename).map(BufReader::new)?)
 }
 
-pub fn partition(
-    input: &str,
-    variable: &str,
-    output_dir: &str,
-) -> Result<()> {
-
+pub fn partition(input: &str, variable: &str, output_dir: &str) -> Result<()> {
     let mut output_dir = output_dir.to_string();
     if !output_dir.ends_with("/") {
         output_dir.push_str("/");
