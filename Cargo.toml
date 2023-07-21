@@ -1,6 +1,6 @@
 [package]
 name = "gtfjson"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 description = "A tool to convert GTF files to newline-delim JSON"
 repository = "https://github.com/noamteyssier/gtfjson"
