@@ -15,6 +15,7 @@ fn main() -> Result<()> {
             input,
             variable,
             output,
-        } => partition::partition(&input, &variable, &output),
+            max_open_files,
+        } => partition::partition(&input, &variable, &output, max_open_files),
     }
 }
