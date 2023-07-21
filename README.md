@@ -28,10 +28,35 @@ cargo install gtfjson
 
 The executable of this tool is `gj`.
 
+### Convert
+
+To convert GTF file formats to NDJSON we can use the `convert` subcommand
+
 ``` bash
 # classic i/o
-gj -i <input.gtf> -o output.json
+gj convert -i <input.gtf> -o output.json
 
 # write to stdout
-gj -i <input.gtf> 
+gj convert -i <input.gtf> 
+```
+
+### Partition
+
+We can also use `gj` to partition a gtf-json in different ways.
+
+It takes a variable in the attributes and creates a new file for each
+category of that record and populates those files with the records matching
+that category.
+
+For example - we can write the GTF of every gene to a separate file:
+
+``` bash
+# Partition on gene_name
+gj partition -i <input.ndjson> -o partitions/ -v gene_name
+
+# Partition of gene_id
+gj partition -i <input.ndjson> -o partitions/ -v gene_id
+
+# Partition of transcript_biotype
+gj partition -i <input.ndjson> -o partitions/ -v transcript_biotype
 ```
