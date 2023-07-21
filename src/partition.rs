@@ -1,16 +1,19 @@
-use crate::{io::match_output, types::FlatRecord};
+use std::{fs::{File, OpenOptions}, io::{BufReader, BufRead, BufWriter, Write}, collections::{HashMap, HashSet}};
 use anyhow::Result;
-use std::{
-    collections::HashMap,
-    fs::File,
-    io::{BufRead, BufReader, BufWriter, Write},
-};
+use spinoff::{Spinner, spinners, Color, Streams};
+use crate::{types::FlatRecord, io::match_output};
 
 fn load_file(filename: &str) -> Result<BufReader<File>> {
     Ok(File::open(filename).map(BufReader::new)?)
 }
 
-pub fn partition(input: &str, variable: &str, output_dir: &str) -> Result<()> {
+pub fn partition(
+    input: &str,
+    variable: &str,
+    output_dir: &str,
+    max_open_files: usize,
+) -> Result<()> {
+
     let mut output_dir = output_dir.to_string();
     if !output_dir.ends_with("/") {
         output_dir.push_str("/");
@@ -19,27 +22,42 @@ pub fn partition(input: &str, variable: &str, output_dir: &str) -> Result<()> {
         std::fs::create_dir_all(&output_dir)?;
     }
 
-    let handle = load_file(input)?;
-    let mut map = HashMap::new();
-    for line in handle.lines() {
+    let input_handle = load_file(input)?;
+
+    let mut partitions = HashSet::new();
+    let mut handle_map = HashMap::new();
+    let mut num_records = 0;
+    let mut spinner = Spinner::new_with_stream(spinners::Aesthetic, "Mapping JSON", Color::Green, Streams::Stderr);
+    for line in input_handle.lines() {
         let line = line?;
         let record = serde_json::from_str::<FlatRecord>(&line)?;
         if record.has_attribute(variable) {
             let value = record.attributes.get(variable).unwrap();
             let value = value.to_string().replace("\"", "");
-            map.entry(value).or_insert(vec![]).push(record);
-        }
-    }
-
-    for key in map.keys() {
-        let output_handle = match_output(&Some(format!("{}{}.json", output_dir, key)));
-        let mut writer = BufWriter::new(output_handle);
-        let records = map.get(key).unwrap();
-        for record in records {
+            partitions.insert(value.clone());
+            let file_path = format!("{}{}.json", output_dir, value);
+            let output_handle = handle_map.entry(value.clone()).or_insert_with(|| {
+                OpenOptions::new()
+                    .create(true)
+                    .append(true)
+                    .open(file_path)
+                    .unwrap()
+            });
             let json = serde_json::to_string(&record)?;
-            writeln!(writer, "{}", json)?;
+            writeln!(output_handle, "{}", json)?;
+
+            if handle_map.len() > max_open_files {
+                let mut keys = handle_map.keys().cloned().collect::<Vec<String>>();
+                keys.sort();
+                let key = keys[0].clone();
+                handle_map.remove(&key);
+            }
+        }
+        num_records += 1;
+        if num_records % 100000 == 0 {
+            spinner.update_text(format!("Identified {} total partitions across {} records", partitions.len(), num_records));
         }
     }
-
+    spinner.stop_with_message(&format!("Identified {} total partitions across {} records", partitions.len(), num_records));
     Ok(())
 }
