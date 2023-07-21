@@ -8,12 +8,11 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Command {
-
     /// Convert a gtf file to ndjson
     Convert {
         #[clap(short, long)]
         input: String,
         #[clap(short, long)]
         output: Option<String>,
-    }
+    },
 }

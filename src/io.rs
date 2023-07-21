@@ -19,4 +19,3 @@ pub fn match_input(input: &str) -> Box<dyn BufRead> {
         false => Box::new(BufReader::new(File::open(input).unwrap())),
     }
 }
-

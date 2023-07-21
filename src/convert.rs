@@ -1,13 +1,9 @@
-use std::io::{BufWriter, Write};
+use crate::io::{match_input, match_output};
 use anyhow::Result;
 use gtftools::GtfReader;
-use crate::io::{match_input, match_output};
+use std::io::{BufWriter, Write};
 
-
-pub fn convert(
-    input_path: &str,
-    output_path: &Option<String>,
-) -> Result<()> {
+pub fn convert(input_path: &str, output_path: &Option<String>) -> Result<()> {
     // build the input handle
     let input_handle = match_input(input_path);
 
