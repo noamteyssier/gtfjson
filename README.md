@@ -1,6 +1,7 @@
-# gtf2json
+# gtfjson
 
 A simple CLI utility to convert a GTF file to NDJSON for fast parsing
+and perform other functionalities on those jsons.
 
 ## Summary
 
@@ -20,15 +21,17 @@ all the annotation parsing.
 You can install this with the rust package manager `cargo`:
 
 ``` bash
-cargo install gtf2json
+cargo install gtfjson
 ```
 
 ## Usage
 
+The executable of this tool is `gj`.
+
 ``` bash
 # classic i/o
-gtf2json -i <input.gtf> -o output.json
+gj -i <input.gtf> -o output.json
 
 # write to stdout
-gtf2json -i <input.gtf> 
+gj -i <input.gtf> 
 ```
