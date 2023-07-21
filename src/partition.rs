@@ -47,10 +47,8 @@ pub fn partition(
             writeln!(output_handle, "{}", json)?;
 
             if handle_map.len() > max_open_files {
-                let mut keys = handle_map.keys().cloned().collect::<Vec<String>>();
-                keys.sort();
-                let key = keys[0].clone();
-                handle_map.remove(&key);
+                let drop_key = handle_map.keys().next().unwrap().clone();
+                handle_map.remove(&drop_key);
             }
         }
         num_records += 1;
