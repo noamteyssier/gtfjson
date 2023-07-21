@@ -33,5 +33,9 @@ pub enum Command {
         /// Output directory to write to
         #[clap(short, long, default_value = ".")]
         output: String,
+
+        /// Maximum number of open files
+        #[clap(short, long, default_value = "5")]
+        max_open_files: usize,
     },
 }
