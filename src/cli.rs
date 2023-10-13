@@ -1,3 +1,4 @@
+use crate::map::Mappings;
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -17,6 +18,22 @@ pub enum Command {
         /// Output file to write to (default=stdout)
         #[clap(short, long)]
         output: Option<String>,
+    },
+
+    /// Generate transcript to gene (t2g) and gene to symbol (g2s) mappings
+    /// and transcript gene symbol (tgs) mappings
+    Map {
+        /// Input ndjson gtf file to map
+        #[clap(short, long)]
+        input: String,
+
+        /// Output file to write to
+        #[clap(short, long)]
+        output: Option<String>,
+
+        /// Mapping to generate
+        #[clap(short, long, default_value = "tgs")]
+        mapping: Mappings,
     },
 
     /// Partition gtf-ndjson file by variable
