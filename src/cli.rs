@@ -1,5 +1,5 @@
-use clap::{Parser, Subcommand};
 use crate::map::Mappings;
+use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 pub struct Cli {
