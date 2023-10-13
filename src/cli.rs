@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use crate::map::Mappings;
 
 #[derive(Parser)]
 pub struct Cli {
@@ -17,6 +18,21 @@ pub enum Command {
         /// Output file to write to (default=stdout)
         #[clap(short, long)]
         output: Option<String>,
+    },
+
+    /// Generate transcript to gene (t2g) and gene to symbol (g2s) mappings
+    Map {
+        /// Input ndjson gtf file to map
+        #[clap(short, long)]
+        input: String,
+
+        /// Output file to write to
+        #[clap(short, long)]
+        output: Option<String>,
+
+        /// Mapping to generate
+        #[clap(short, long, default_value = "T2G")]
+        mapping: Mappings,
     },
 
     /// Partition gtf-ndjson file by variable
