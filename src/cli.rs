@@ -21,6 +21,7 @@ pub enum Command {
     },
 
     /// Generate transcript to gene (t2g) and gene to symbol (g2s) mappings
+    /// and transcript gene symbol (tgs) mappings
     Map {
         /// Input ndjson gtf file to map
         #[clap(short, long)]
@@ -31,7 +32,7 @@ pub enum Command {
         output: Option<String>,
 
         /// Mapping to generate
-        #[clap(short, long, default_value = "T2G")]
+        #[clap(short, long, default_value = "tgs")]
         mapping: Mappings,
     },
 
